@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Streakwise Habit Tracker</title>
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b6e6e"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Streakwise">
+<style>
+:root{--bg:#f2f5f7;--cd:#fff;--tx:#14202b;--mu:#566472;--ln:#dde3e8;--ac:#0b6e6e;--on:#fff;--h0:#e3e9ed;--ok:#0b7a4b;--bad:#b42318;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f161c;--cd:#18222b;--tx:#eaf0f4;--mu:#9fb0bd;--ln:#2a3945;--ac:#4fd1c5;--on:#06201e;--h0:#26333d;--ok:#5fd49b;--bad:#ff8a7a}}
+:root[data-theme=dark]{--bg:#0f161c;--cd:#18222b;--tx:#eaf0f4;--mu:#9fb0bd;--ln:#2a3945;--ac:#4fd1c5;--on:#06201e;--h0:#26333d;--ok:#5fd49b;--bad:#ff8a7a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:16px/1.4 "Avenir Next",Avenir,"Segoe UI",Roboto,system-ui,sans-serif}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+main{flex:1;overflow-y:auto;padding:16px 16px 100px;animation:in .22s ease-out}
+@keyframes in{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:none}}
+h1{font-size:28px;letter-spacing:-.02em;margin:2px 0 14px}h2{font-size:18px;margin:20px 0 8px}
+.mu{color:var(--mu);font-size:14px}.c{text-align:center}
+.card{background:var(--cd);border:1px solid var(--ln);border-radius:16px;padding:14px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hd{display:flex;justify-content:space-between;align-items:flex-start}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.ib{min-width:44px;min-height:44px;border:0;background:transparent;font-size:20px;border-radius:12px}
+.btn{min-height:48px;padding:0 18px;border-radius:14px;border:1px solid var(--ln);background:var(--cd);font-weight:600;width:100%;margin-top:8px}
+.btn.p{background:var(--ac);color:var(--on);border-color:var(--ac)}.btn.d{color:var(--bad);border-color:var(--bad)}
+.big{font-size:34px;font-weight:700;letter-spacing:-.03em}
+.bar{height:14px;background:var(--h0);border-radius:8px;overflow:hidden;margin:10px 0 6px}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:8px;transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.hc{display:flex;gap:12px;align-items:center;border-left:6px solid var(--c)}
+.hc .ic{font-size:28px;width:44px;text-align:center}.hc .bd{flex:1;min-width:0;cursor:pointer}
+.hc .ac{display:flex;flex-direction:column;align-items:center}
+.stt{font-weight:600;font-size:14px;margin-top:2px}.done .stt{color:var(--ok)}
+.ck{width:52px;height:52px;border-radius:50%;border:3px solid var(--c);background:transparent;font-size:26px;font-weight:700;color:var(--on);transition:transform .15s}
+.ck.on{background:var(--c);animation:pop .3s}@keyframes pop{50%{transform:scale(1.2)}}
+.stp{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:14px}
+.sb{width:44px;height:44px;border-radius:12px;border:1px solid var(--ln);background:var(--bg);font-size:20px}
+nav{display:flex;border-top:1px solid var(--ln);background:var(--cd)}
+nav button{flex:1;min-height:60px;border:0;background:transparent;font-size:12px;color:var(--mu)}
+nav button b{display:block;font-size:20px;font-weight:400}nav .on{color:var(--ac);font-weight:700}
+.fab{position:fixed;bottom:84px;right:max(16px,calc(50% - 264px));width:60px;height:60px;border-radius:50%;border:0;background:var(--ac);color:var(--on);font-size:30px;box-shadow:0 6px 18px #0004}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:44px;padding:0 14px;border-radius:22px;border:1px solid var(--ln);background:var(--cd)}
+.chip.on{background:var(--ac);color:var(--on);border-color:var(--ac);font-weight:700}
+.sw{width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:var(--c)}.sw.on{border-color:var(--tx)}
+.ig{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}.ig button{min-height:44px;border-radius:10px;border:1px solid transparent;background:transparent;font-size:22px}.ig .on{border-color:var(--ac);background:var(--h0)}
+label{display:block;font-weight:600;margin:14px 0 6px}
+input[type=text],input[type=number],input[type=time],input[type=date],select,textarea{width:100%;min-height:48px;padding:8px 12px;border-radius:12px;border:1px solid var(--ln);background:var(--cd)}
+textarea{min-height:160px;font:12px/1.3 monospace}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.grid .dn{font-size:12px;color:var(--mu)}
+.dc{min-height:44px;border-radius:10px;border:2px solid transparent;background:var(--h0);font-size:13px;padding:2px}
+.dc.full{background:var(--ac);color:var(--on);font-weight:700}.dc.part{background:color-mix(in srgb,var(--ac) 35%,var(--h0))}
+.dc.miss{color:var(--bad)}.dc.fu{background:transparent;color:var(--mu);opacity:.6}.dc.sel{border-color:var(--tx)}.dc small{display:block;font-size:11px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}.tiles .card{margin:0}
+.bars{display:flex;gap:6px;align-items:flex-end;height:120px}.bars div{flex:1;text-align:center;font-size:11px}.bars i{display:block;background:var(--ac);border-radius:6px 6px 0 0;min-height:3px}
+.hm{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;gap:3px}.hm i{aspect-ratio:1;border-radius:3px;background:var(--h0);position:relative}.hm i:after{content:"";position:absolute;inset:0;border-radius:3px;background:var(--ac);opacity:var(--o,0)}
+.pb{display:flex;align-items:center;gap:8px;font-size:14px;margin:6px 0}.pb span:first-child{width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pb .bar{flex:1;margin:0;height:10px}
+.empty{text-align:center;padding:36px 12px}.empty .e{font-size:48px}
+.modal{position:fixed;inset:0;background:#0009;display:flex;align-items:flex-end;justify-content:center;z-index:9}
+.modal>div{background:var(--cd);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:18px;max-height:88%;overflow:auto}
+#toast{position:fixed;left:16px;right:16px;bottom:96px;margin:auto;max-width:520px;background:var(--tx);color:var(--bg);padding:12px 16px;border-radius:12px;z-index:10;display:none}
+.ob{display:flex;flex-direction:column;justify-content:center;min-height:100%;text-align:center}.ob .e{font-size:72px}
+.splash{display:flex;height:100%;align-items:center;justify-content:center;font-size:32px;font-weight:700;letter-spacing:-.03em}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div id="app"></div><div id="toast" role="status" aria-live="polite"></div>
+<script>
+const $=s=>document.querySelector(s),pad=n=>String(n).padStart(2,'0');
+const key=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const parse=k=>{const[a,b,c]=k.split('-').map(Number);return new Date(a,b-1,c)};
+const add=(k,n)=>{const d=parse(k);d.setDate(d.getDate()+n);return key(d)};
+const today=()=>key(new Date()),dow=k=>parse(k).getDay();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DK=/^\d{4}-\d{2}-\d{2}$/,SK='streakwise.v1',DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const ICONS=['🏃','📚','💧','🧘','💪','🥗','😴','✍️','💻','🎸','🚶','🚴','🧹','💰','🌱','⭐'];
+const CATS=['Health','Fitness','Study','Work','Personal','Finance','Other'];
+const COLS=['#0b6e6e','#2563eb','#7c3aed','#c026d3','#dc2626','#d97706','#16a34a','#475569'];
+const blank=()=>({habits:[],logs:{},prefs:{theme:'auto',ws:1,name:'',onb:false}});
+function sanitize(o){
+ if(!o||typeof o!=='object'||!Array.isArray(o.habits))return null;
+ const habits=o.habits.filter(h=>h&&typeof h.id==='string'&&!h.id.includes('|')&&typeof h.name==='string'&&h.name.trim()&&DK.test(h.start)).map(h=>({id:h.id,name:h.name.slice(0,60),desc:String(h.desc||'').slice(0,120),icon:String(h.icon||'⭐').slice(0,4),color:/^#[0-9a-f]{6}$/i.test(h.color)?h.color:COLS[0],cat:CATS.includes(h.cat)?h.cat:'Other',goal:['bool','count','duration','distance'].includes(h.goal)?h.goal:'bool',target:Math.max(.5,+h.target||1),unit:String(h.unit||'').slice(0,12),freq:['daily','days','week','month'].includes(h.freq)?h.freq:'daily',days:(Array.isArray(h.days)?h.days:[]).filter(x=>x>=0&&x<=6),n:Math.max(1,Math.min(31,+h.n||1)),start:h.start,remOn:!!h.remOn,rem:(Array.isArray(h.rem)?h.rem:[]).filter(t=>/^\d{2}:\d{2}$/.test(t)),status:['active','paused','archived'].includes(h.status)?h.status:'active',pauses:(Array.isArray(h.pauses)?h.pauses:[]).filter(p=>Array.isArray(p)&&DK.test(p[0])&&(!p[1]||DK.test(p[1]))).map(p=>[p[0],p[1]||null])}));
+ const ids=new Set(habits.map(h=>h.id)),logs={};
+ for(const k in(o.logs||{})){const[id,d]=k.split('|'),l=o.logs[k];if(ids.has(id)&&DK.test(d)&&l&&['done','rest','part'].includes(l.s))logs[k]={s:l.s,v:+l.v||0}}
+ const p=o.prefs||{};
+ return{habits,logs,prefs:{theme:['auto','light','dark'].includes(p.theme)?p.theme:'auto',ws:p.ws===0?0:1,name:String(p.name||'').slice(0,30),onb:!!p.onb}}}
+const DBN='streakwise',storeInfo={mode:'starting',persistent:null};let db=null,S=blank();const snap=new Map();
+const openDB=()=>new Promise((res,rej)=>{if(!window.indexedDB)return rej(new Error('IndexedDB unavailable'));const r=indexedDB.open(DBN,1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('habits',{keyPath:'id'});d.createObjectStore('logs',{keyPath:'k'});d.createObjectStore('meta',{keyPath:'k'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);r.onblocked=()=>rej(new Error('blocked'))});
+const idbAll=st=>new Promise((res,rej)=>{const q=db.transaction(st).objectStore(st).getAll();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)});
+const legacyLoad=()=>{try{const r=localStorage.getItem(SK);return r?sanitize(JSON.parse(r)):null}catch(e){return null}};
+async function boot(){
+ try{db=await openDB();const[hs,ls,ms]=await Promise.all([idbAll('habits'),idbAll('logs'),idbAll('meta')]),pr=ms.find(m=>m.k==='prefs');
+  if(pr){const lg={};ls.forEach(l=>lg[l.k]={s:l.s,v:l.v});S=sanitize({habits:hs,logs:lg,prefs:pr.val})||blank();for(const k in S.logs)snap.set(k,JSON.stringify(S.logs[k]))}
+  else S=legacyLoad()||blank(); /* first run, or one-time migration from the old localStorage version */
+  storeInfo.mode='indexeddb';if(!pr)save();
+  navigator.storage?.persist?.().then(p=>{storeInfo.persistent=p}).catch(()=>{})}
+ catch(e){db=null;S=legacyLoad()||blank();storeInfo.mode='localStorage fallback (IndexedDB unavailable)'}}
+function save(){
+ if(!db){try{localStorage.setItem(SK,JSON.stringify(S))}catch(e){toast('Could not save: browser storage is blocked or full.')}return}
+ try{const tx=db.transaction(['habits','logs','meta'],'readwrite'),hS=tx.objectStore('habits'),lS=tx.objectStore('logs'),mS=tx.objectStore('meta');
+  hS.clear();S.habits.forEach(h=>hS.put(h));mS.put({k:'prefs',val:S.prefs});
+  const seen=new Set();
+  for(const k in S.logs){seen.add(k);const j=JSON.stringify(S.logs[k]);if(snap.get(k)!==j){lS.put({k,...S.logs[k]});snap.set(k,j)}}
+  for(const k of[...snap.keys()])if(!seen.has(k)){lS.delete(k);snap.delete(k)}
+  tx.onabort=tx.onerror=()=>{snap.clear();toast('Could not save to IndexedDB. Export a backup.',5000)}}
+ catch(e){toast('Could not save to IndexedDB. Export a backup.',5000)}}
+let tt;function toast(m,ms=3000){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',ms)}
+
+/* ---- schedule + streak logic (all derived from completion records) ---- */
+const L=(h,d)=>S.logs[h.id+'|'+d],isDone=(h,d)=>L(h,d)?.s==='done',isRest=(h,d)=>L(h,d)?.s==='rest';
+const paused=(h,d)=>h.pauses.some(p=>d>=p[0]&&(!p[1]||d<p[1])),per=h=>h.freq==='week'||h.freq==='month';
+const dueDay=(h,d)=>d>=h.start&&!paused(h,d)&&(h.freq==='daily'||(h.freq==='days'&&h.days.includes(dow(d))));
+const pStart=(f,d)=>f==='month'?d.slice(0,8)+'01':add(d,-((dow(d)-S.prefs.ws+7)%7));
+const pNext=(f,s)=>{if(f==='month'){const x=parse(s);return key(new Date(x.getFullYear(),x.getMonth()+1,1))}return add(s,7)};
+function pCount(h,s){let c=0;const e=pNext(h.freq,s),T=today();for(let d=s;d<e&&d<=T;d=add(d,1))if(d>=h.start&&isDone(h,d))c++;return c}
+function streaks(h){
+ const T=today();let run=0,best=0;
+ if(!per(h)){for(let d=h.start;d<=T;d=add(d,1)){if(isDone(h,d)){run++;best=Math.max(best,run)}else if(dueDay(h,d)&&!isRest(h,d)&&d<T)run=0}}
+ else{const cs=pStart(h.freq,T);for(let s=pStart(h.freq,h.start);s<=cs;s=pNext(h.freq,s)){if(pCount(h,s)>=h.n){run++;best=Math.max(best,run)}else if(s<cs)run=0}}
+ return{cur:run,best}}
+function totalDone(h){const T=today();let c=0;for(const k in S.logs)if(k.startsWith(h.id+'|')&&S.logs[k].s==='done'&&k.slice(-10)<=T)c++;return c}
+function rate(h){const T=today();let ok=0,tot=0;
+ if(!per(h)){for(let d=h.start;d<=T;d=add(d,1)){if(isRest(h,d))continue;if(isDone(h,d)){ok++;tot++}else if(dueDay(h,d)&&d<T)tot++}}
+ else{const cs=pStart(h.freq,T);for(let s=pStart(h.freq,h.start);s<=cs;s=pNext(h.freq,s)){const m=pCount(h,s)>=h.n;if(s<cs||m){tot++;if(m)ok++}}}
+ return tot?Math.round(ok/tot*100):0}
+function dayStat(d){const done=[],missed=[],rest=[],T=today();
+ for(const h of S.habits){if(d<h.start||d>T&&0)continue;if(isDone(h,d))done.push(h);else if(isRest(h,d))rest.push(h);else if(h.status!=='archived'&&!per(h)&&dueDay(h,d)&&d<T)missed.push(h)}
+ const t=done.length+missed.length;return{done,missed,rest,pct:t?Math.round(done.length/t*100):null}}
+const unit=h=>h.goal==='duration'?'min':h.goal==='distance'?'km':(h.unit||'times');
+const step=h=>h.goal==='count'?1:h.goal==='distance'?.5:(h.target>=60?10:5);
+const todayList=()=>{const T=today();return S.habits.filter(h=>h.status==='active'&&(dueDay(h,T)||(per(h)&&T>=h.start&&(isDone(h,T)||pCount(h,pStart(h.freq,T))<h.n))))};
+function badges(h){const s=streaks(h),u=per(h)?(h.freq==='week'?'week':'month'):'day',b=[];
+ [7,30,100].forEach(n=>{if(s.best>=n)b.push('🔥 '+n+' '+u+' streak')});if(totalDone(h)>=100)b.push('🏆 100 completions');return b}
+function periodProg(h,a,z){let done=0,goal=0;const T=today();for(let d=a;d<=z;d=add(d,1)){if(d>T&&0)break;if(d<=T&&isDone(h,d))done++;if(!per(h)&&dueDay(h,d))goal++}
+ if(per(h)){const days=(parse(z)-parse(a))/864e5+1;goal=h.freq==='week'?h.n*Math.ceil(days/7):h.n*Math.ceil(days/31)}return{done,goal}}
+
+/* ---- actions ---- */
+function setDone(h,d,on){if(d>today())return toast('Future dates can’t be completed.');const k=h.id+'|'+d;
+ if(on){S.logs[k]={s:'done',v:h.target};const s=streaks(h),u=per(h)?h.freq:'day';if([7,30,100,365].includes(s.cur))toast('🔥 '+s.cur+'-'+u+' streak!');else if(totalDone(h)===100)toast('🏆 100 completions!')}else delete S.logs[k];save()}
+function bump(h,d,dir){const k=h.id+'|'+d,l=S.logs[k]||{v:0};let v=Math.max(0,+((l.v||0)+dir*step(h)).toFixed(2));
+ if(v>=h.target)setDone(h,d,true);else{if(v>0)S.logs[k]={s:'part',v};else delete S.logs[k];save()}}
+function toggleRest(h,d){const k=h.id+'|'+d;if(isRest(h,d)){delete S.logs[k];return save()}
+ if(d>today())return toast('Rest days apply to today or past dates.');const ws=pStart('week',d);let c=0;for(let x=ws;x<add(ws,7);x=add(x,1))if(isRest(h,x))c++;
+ if(c>=2)return toast('Rest-day limit reached: 2 per week for each habit.');S.logs[k]={s:'rest',v:0};save()}
+let fired={};
+function notify(h){const t=h.icon+' Time for '+h.name,b='Don’t forget your '+h.name+' habit.';try{if('Notification' in window&&Notification.permission==='granted'){new Notification(t,{body:b});return}}catch(e){}toast(t+' — '+b,7000)}
+function tick(){const n=new Date(),hm=pad(n.getHours())+':'+pad(n.getMinutes()),T=today();
+ for(const h of S.habits){if(h.status!=='active'||!h.remOn||!h.rem.includes(hm))continue;const f=h.id+hm+T;if(fired[f])continue;fired[f]=1;if(isDone(h,T)||(!per(h)&&!dueDay(h,T)))continue;notify(h)}}
+setInterval(tick,15000);
+async function askPerm(){if(!('Notification' in window))return toast('System notifications aren’t available here. Reminders will appear in the app while it’s open.',5000);
+ try{if(Notification.permission==='default')await Notification.requestPermission()}catch(e){}
+ if(Notification.permission==='denied')toast('Notifications are blocked. Reminders will appear in the app while it’s open.',5000)}
+
+/* ---- UI state + views ---- */
+const ui={tab:'today',view:null,cal:{m:today().slice(0,8)+'01',sel:today()},dm:today().slice(0,8)+'01',draft:null,modal:null,ob:0,splash:true};
+const empty=(e,t,m,b)=>`<div class=empty><div class=e>${e}</div><h2>${t}</h2><p class=mu>${m}</p>${b?`<button class="btn p" data-a=add>${b}</button>`:''}</div>`;
+const prog=p=>`<div class=bar role=progressbar aria-valuenow=${p} aria-valuemin=0 aria-valuemax=100 aria-label="Progress ${p} percent"><i style="width:${p}%"></i></div>`;
+function card(h){const T=today(),d=isDone(h,T),r=isRest(h,T),l=L(h,T),st=streaks(h),u=per(h)?h.freq:'day';
+ const status=d?'✓ Completed':r?'— Rest day':l&&l.s==='part'?'◐ In progress':'○ Not done';
+ const pc=per(h)?` · ${pCount(h,pStart(h.freq,T))}/${h.n} this ${h.freq}`:'';
+ const sp=h.goal!=='bool'&&!d&&!r?`<div class=stp><button class=sb data-a=bump data-id=${h.id} data-v=-1 aria-label="Decrease ${esc(h.name)}">−</button><span>${l?l.v:0} / ${h.target} ${esc(unit(h))}</span><button class=sb data-a=bump data-id=${h.id} data-v=1 aria-label="Increase ${esc(h.name)}">+</button></div>`:'';
+ return `<article class="card hc ${d?'done':''}" style="--c:${h.color}"><div class=ic aria-hidden=true>${h.icon}</div><div class=bd data-a=open data-id=${h.id} role=button tabindex=0><b>${esc(h.name)}</b>${h.desc?`<div class=mu>${esc(h.desc)}</div>`:''}<div class=mu>🔥 ${st.cur} ${u} streak${pc}</div><div class=stt>${status}</div>${sp}</div><div class=ac><button class="ck ${d?'on':''}" data-a=toggle data-id=${h.id} aria-pressed=${d} aria-label="${d?'Undo completion of':'Complete'} ${esc(h.name)}">${d?'✓':''}</button><button class=ib data-a=rest data-id=${h.id} title="Rest day" aria-label="${r?'Remove rest day for':'Mark rest day for'} ${esc(h.name)}">${r?'↩':'🛌'}</button></div></article>`}
+function vToday(){const T=today(),hs=todayList(),dn=hs.filter(h=>isDone(h,T)).length,p=hs.length?Math.round(dn/hs.length*100):0,g=new Date().getHours();
+ const gr=g<12?'Good morning':g<18?'Good afternoon':'Good evening';
+ return `<div class=hd><div><div class=mu>${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</div><h1>${gr}${S.prefs.name?', '+esc(S.prefs.name):''}</h1></div><button class=ib data-a=tab data-v=settings aria-label="Profile and settings">👤</button></div>
+ <section class=card><div class=row><b>Today’s progress</b><span class=big>${p}%</span></div>${prog(p)}<div class=mu>${dn} / ${hs.length} habits completed</div></section>
+ ${hs.length?hs.map(card).join(''):S.habits.some(h=>h.status==='active')?empty('🌤️','Nothing left for today','Everything scheduled is handled. Rest up or add another habit.'):empty('🌱','No habits yet','Start with one small habit and build from there.','+ Create Habit')}
+ <button class=fab data-a=add aria-label="Add habit">＋</button>`}
+function monthGrid(m,cellFn){const d=parse(m),y=d.getFullYear(),mo=d.getMonth(),off=(d.getDay()-S.prefs.ws+7)%7,n=new Date(y,mo+1,0).getDate();
+ let s=[...Array(7)].map((_,i)=>`<div class=dn>${DAYS[(i+S.prefs.ws)%7][0]}</div>`).join('')+'<i></i>'.repeat(off);
+ for(let i=1;i<=n;i++)s+=cellFn(key(new Date(y,mo,i)),i);return `<div class=grid>${s}</div>`}
+const mNav=(m,a)=>{const d=parse(m);return `<div class=row><button class=ib data-a=${a} data-v=-12 aria-label="Previous year">«</button><button class=ib data-a=${a} data-v=-1 aria-label="Previous month">‹</button><b>${d.toLocaleDateString(undefined,{month:'long',year:'numeric'})}</b><button class=ib data-a=${a} data-v=1 aria-label="Next month">›</button><button class=ib data-a=${a} data-v=12 aria-label="Next year">»</button></div>`};
+const shiftM=(m,n)=>{const d=parse(m);return key(new Date(d.getFullYear(),d.getMonth()+n,1))};
+function vCal(){const T=today(),c=ui.cal,st=dayStat(c.sel);
+ const g=monthGrid(c.m,(k,i)=>{const s=dayStat(k),f=k>T,cl=f?'fu':s.pct==null?'':s.pct===100?'full':s.pct>0?'part':'miss',mk=f?'':s.pct==null?'':s.pct===100?'✓':s.pct>0?'◐':'✗';
+  return `<button class="dc ${cl} ${k===c.sel?'sel':''}" data-a=sel data-v=${k} aria-label="${k}${mk?', '+(s.pct===100?'all completed':s.pct>0?'partly completed':'missed'):''}">${i}<small>${mk}</small></button>`});
+ const lst=(t,a)=>a.length?`<div><b>${t}</b>: ${a.map(h=>h.icon+' '+esc(h.name)).join(', ')}</div>`:'';
+ return `<h1>Calendar</h1><div class=card>${mNav(c.m,'cm')}${g}<p class=mu>✓ all done · ◐ partly · ✗ missed · — rest days listed below</p></div>
+ <div class=card><b>${parse(c.sel).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</b>${c.sel>T?'<p class=mu>Future date — nothing to track yet.</p>':st.done.length+st.missed.length+st.rest.length===0?'<p class=mu>No habits tracked on this day.</p>':`<p>${st.done.length} completed${st.pct!=null?' · '+st.pct+'%':''}</p>${lst('✓ Completed',st.done)}${lst('— Rest day',st.rest)}${lst('✗ Missed',st.missed)}`}</div>`}
+function vStats(){const T=today(),act=S.habits.filter(h=>h.status!=='archived');
+ if(!S.habits.length)return `<h1>Insights</h1>`+empty('📊','No statistics yet','Create a habit and complete it a few times to see your progress here.','+ Create Habit');
+ const tl=todayList(),dn=tl.filter(h=>isDone(h,T)).length;let all=0,days=0,bestAll=0,run=0,cur=0;const first=S.habits.map(h=>h.start).sort()[0];
+ for(const h of S.habits)all+=totalDone(h);
+ for(let d=first;d<=T;d=add(d,1)){if(dayStat(d).done.length){days++;run++;bestAll=Math.max(bestAll,run)}else if(d<T)run=0}cur=run;
+ const rs=act.map(h=>({h,r:rate(h)})).sort((a,b)=>b.r-a.r);
+ const wk=[...Array(7)].map((_,i)=>{const d=add(T,i-6),p=dayStat(d).pct;return `<div><small>${p==null?'–':p+'%'}</small><i style="height:${p||0}px"></i>${DAYS[dow(d)][0]}</div>`}).join('');
+ const mo=[...Array(5)].map((_,i)=>{const s=add(pStart('week',T),(i-4)*7);let a=0,b=0;for(let x=s;x<add(s,7)&&x<=T;x=add(x,1)){const q=dayStat(x);a+=q.done.length;b+=q.done.length+q.missed.length}const p=b?Math.round(a/b*100):0;return `<div><small>${p}%</small><i style="height:${p}px"></i>${parse(s).getDate()}/${parse(s).getMonth()+1}</div>`}).join('');
+ const hs=pStart('week',add(T,-77));let hm='';for(let i=0;i<84;i++){const d=add(hs,i);if(d>T){hm+='<i></i>';continue}const p=dayStat(d).pct;hm+=`<i title="${d}: ${p==null?'none':p+'%'}" style="--o:${p==null?0:.2+p/125}"></i>`}
+ return `<h1>Insights</h1><div class=tiles><div class=card><div class=big>${act.length}</div><div class=mu>Total habits</div></div><div class=card><div class=big>${dn}/${tl.length}</div><div class=mu>Completed today</div></div><div class=card><div class=big>${cur}d</div><div class=mu>Current streak (days with a completion)</div></div><div class=card><div class=big>${bestAll}d</div><div class=mu>Best streak</div></div><div class=card><div class=big>${all}</div><div class=mu>Total completions</div></div><div class=card><div class=big>${days}</div><div class=mu>Days with a completion</div></div></div>
+ <h2>Last 7 days</h2><div class="card bars">${wk}</div><h2>Last 5 weeks</h2><div class="card bars">${mo}</div>
+ <h2>Consistency</h2><div class=card>${rs.length?rs.map(x=>`<div class=pb><span>${x.h.icon} ${esc(x.h.name)}</span>${prog(x.r)}<b>${x.r}%</b></div>`).join(''):'<p class=mu>No active habits.</p>'}${rs.length>1?`<p class=mu>Most consistent: ${esc(rs[0].h.name)} (${rs[0].r}%). Needs attention: ${esc(rs.at(-1).h.name)} (${rs.at(-1).r}%).</p>`:''}</div>
+ <h2>Heatmap · 12 weeks</h2><div class=card><div class=hm>${hm}</div><p class=mu>Darker = higher share of scheduled habits completed.</p></div>`}
+function vDetail(){const h=S.habits.find(x=>x.id===ui.view.id);if(!h){ui.view=null;return vToday()}
+ const T=today(),s=streaks(h),u=per(h)?h.freq+'s':'days',wk=pStart('week',T),ms=T.slice(0,8)+'01',me=key(new Date(parse(T).getFullYear(),parse(T).getMonth()+1,0)),y=T.slice(0,4);
+ const pr=(n,a,z)=>{const p=periodProg(h,a,z),pc=p.goal?Math.min(100,Math.round(p.done/p.goal*100)):0;return `<div class=pb><span>${n}</span>${prog(pc)}<b>${p.done}/${p.goal}</b></div>`};
+ const g=monthGrid(ui.dm,(k,i)=>{const f=k>T,d=isDone(h,k),r=isRest(h,k),l=L(h,k),m=!f&&!d&&!r&&dueDay(h,k)&&k<T,mk=d?'✓':r?'—':m?'✗':l?'◐':'';
+  return `<button class="dc ${f?'fu':''} ${m?'miss':''}" ${f||k<h.start?'disabled':''} data-a=dtoggle data-v=${k} style="${d?`background:${h.color};color:#fff;font-weight:700`:''}" aria-label="${k} ${d?'completed':r?'rest day':m?'missed':'not done'}">${i}<small>${mk}</small></button>`});
+ const bd=badges(h);
+ return `<div class=hd><button class=ib data-a=back aria-label="Back">←</button><button class=ib data-a=edit data-id=${h.id} aria-label="Edit habit">✏️</button></div>
+ <h1>${h.icon} ${esc(h.name)}</h1><p class=mu>${esc(h.cat)} · ${h.status==='paused'?'Paused':h.status==='archived'?'Archived':'Active'}${h.desc?' · '+esc(h.desc):''}</p>
+ <div class=tiles><div class=card><div class=big>🔥 ${s.cur}</div><div class=mu>Current streak (${u})</div></div><div class=card><div class=big>${s.best}</div><div class=mu>Longest streak (${u})</div></div><div class=card><div class=big>${totalDone(h)}</div><div class=mu>Total completions</div></div><div class=card><div class=big>${rate(h)}%</div><div class=mu>Completion rate</div></div></div>
+ <h2>Progress</h2><div class=card>${pr('This week',wk,add(wk,6))}${pr('This month',ms,me)}${pr('This year',y+'-01-01',y+'-12-31')}</div>
+ <h2>History</h2><div class=card>${mNav(ui.dm,'dm')}${g}<p class=mu>Tap a past day to complete or undo it. ✓ done · — rest · ✗ missed</p></div>
+ <h2>Milestones</h2><div class=card>${bd.length?bd.join(' · '):'<span class=mu>Reach a 7-unit streak or 100 completions to earn your first badge.</span>'}</div>`}
+function chips(f,opts,cur){return `<div class=chips>${opts.map(([v,l])=>`<button class="chip ${cur===v?'on':''}" data-a=set data-f=${f} data-v="${v}" aria-pressed=${cur===v}>${l}</button>`).join('')}</div>`}
+function vForm(){const d=ui.draft,ed=!!d.id;
+ return `<div class=hd><button class=ib data-a=back aria-label="Back">←</button><h1>${ed?'Edit habit':'New habit'}</h1><span style="width:44px"></span></div>
+ <label for=fn>Name</label><input type=text id=fn data-f=name maxlength=60 value="${esc(d.name)}" placeholder="e.g. Read 20 pages">
+ <label for=fd>Description (optional)</label><input type=text id=fd data-f=desc maxlength=120 value="${esc(d.desc)}">
+ <label>Icon</label><div class=ig>${ICONS.map(i=>`<button class="${d.icon===i?'on':''}" data-a=set data-f=icon data-v="${i}" aria-label="Icon ${i}">${i}</button>`).join('')}</div>
+ <label>Category</label>${chips('cat',CATS.map(c=>[c,c]),d.cat)}
+ <label>Color</label><div class=chips>${COLS.map(c=>`<button class="sw ${d.color===c?'on':''}" style="--c:${c}" data-a=set data-f=color data-v="${c}" aria-label="Color ${c}" aria-pressed=${d.color===c}></button>`).join('')}</div>
+ <label>Frequency</label>${chips('freq',[['daily','Every day'],['days','Specific days'],['week','Times per week'],['month','Times per month']],d.freq)}
+ ${d.freq==='days'?`<div class=chips style="margin-top:8px">${DAYS.map((n,i)=>`<button class="chip ${d.days.includes(i)?'on':''}" data-a=day data-v=${i} aria-pressed=${d.days.includes(i)}>${n}</button>`).join('')}</div>`:''}
+ ${per(d)?`<label for=fx>Times per ${d.freq}</label><input type=number id=fx data-f=n min=1 max=${d.freq==='week'?7:31} value="${d.n}">`:''}
+ <label>Goal</label>${chips('goal',[['bool','Done / not done'],['count','Count'],['duration','Duration (min)'],['distance','Distance (km)']],d.goal)}
+ ${d.goal!=='bool'?`<label for=ft>Target${d.goal==='count'?'':' ('+unit(d)+')'}</label><input type=number id=ft data-f=target min=0.5 step=0.5 value="${d.target}">${d.goal==='count'?`<label for=fu>Unit (e.g. glasses, pages)</label><input type=text id=fu data-f=unit maxlength=12 value="${esc(d.unit)}">`:''}`:''}
+ <label>Reminders</label><label class=row style="font-weight:400;margin:0"><span>Remind me</span><input type=checkbox data-a=remon ${d.remOn?'checked':''} style="width:28px;height:28px"></label>
+ ${d.remOn?`<div class=chips style="margin:8px 0">${d.rem.map((t,i)=>`<button class=chip data-a=remdel data-v=${i} aria-label="Remove reminder ${t}">${t} ✕</button>`).join('')||'<span class=mu>No reminder times yet.</span>'}</div><div class=row><input type=time data-f=newrem value="${d.newrem}" aria-label="Reminder time"><button class="btn" style="width:auto;margin:0" data-a=remadd>Add time</button></div>`:''}
+ <label for=fs>Start date</label><input type=date id=fs data-f=start value="${d.start}">
+ <button class="btn p" data-a=savef>${ed?'Save changes':'Create habit'}</button>
+ ${ed?`<button class=btn data-a=pause data-id=${d.id}>${d.status==='paused'?'Resume habit':'Pause habit'}</button><button class=btn data-a=archive data-id=${d.id}>Archive habit</button><button class="btn d" data-a=delask data-id=${d.id}>Delete habit…</button>`:''}`}
+function vArch(){const a=S.habits.filter(h=>h.status==='archived');
+ return `<div class=hd><button class=ib data-a=back aria-label="Back">←</button><h1>Archived</h1><span style="width:44px"></span></div>${a.length?a.map(h=>`<div class="card row"><span>${h.icon} <b>${esc(h.name)}</b><div class=mu>${totalDone(h)} completions kept</div></span><span><button class=chip data-a=unarch data-id=${h.id}>Restore</button> <button class="chip" data-a=delask data-id=${h.id} aria-label="Delete ${esc(h.name)}">🗑</button></span></div>`).join(''):empty('📦','Nothing archived','Archived habits keep their history and show up here.')}`}
+function vSet(){const p=S.prefs,perm='Notification' in window?Notification.permission:'unsupported';
+ return `<h1>Settings</h1><div class=card><label for=sn style="margin-top:0">Your name</label><input type=text id=sn data-p=name maxlength=30 value="${esc(p.name)}">
+ <label>Appearance</label>${chips('theme',[['auto','System'],['light','Light'],['dark','Dark']],p.theme).replace(/data-a=set/g,'data-a=pref')}
+ <label>Week starts on</label>${chips('ws',[['1','Monday'],['0','Sunday']],String(p.ws)).replace(/data-a=set/g,'data-a=pref')}</div>
+ <div class=card><b>Storage</b><p class=mu>Saved in: ${storeInfo.mode==='indexeddb'?'IndexedDB on this device':esc(storeInfo.mode)}. Protected from automatic clearing: ${storeInfo.persistent==null?'unknown':storeInfo.persistent?'yes':'no'}.</p><button class=btn data-a=verify>Verify storage</button></div><div class=card><b>Notifications</b><p class=mu>Permission: ${perm}. Reminders fire while the app is open.</p><button class=btn data-a=perm>Allow notifications</button></div>
+ <button class=btn data-a=arch>Archived habits</button><button class=btn data-a=exp>Back up (export JSON)</button><button class=btn data-a=imp>Restore (import JSON)</button><button class="btn d" data-a=resetask>Reset statistics</button><button class=btn data-a=about>About</button><button class=btn data-a=priv>Privacy</button>`}
+function vOb(){const P=[['🌱','Build better habits.','Small daily actions add up. Start with one.'],['📈','Track your progress.','Streaks, charts and a calendar built from your own records.'],['🔁','Stay consistent.','Gentle reminders and rest days keep you going.']],p=P[ui.ob];
+ return `<div class=ob><div class=e>${p[0]}</div><h1>${p[1]}</h1><p class=mu>${p[2]}</p><button class="btn p" data-a=obnext>${ui.ob<2?'Next':'Create your first habit'}</button><button class=btn data-a=obskip>Skip</button></div>`}
+function modal(){const m=ui.modal;return m?`<div class=modal data-a=closem role=dialog aria-modal=true><div onclick="event.stopPropagation()"><h2 style="margin-top:0">${m.t}</h2>${m.b}<button class=btn data-a=closem>Close</button></div></div>`:''}
+function render(){const a=$('#app'),sc=a.querySelector('main')?.scrollTop||0;let body,nav=true;
+ if(ui.splash){a.innerHTML='<div class=splash>🔥 Streakwise</div>';return}
+ if(!S.prefs.onb){body=vOb();nav=false}
+ else if(ui.view?.t==='form')body=vForm();else if(ui.view?.t==='detail')body=vDetail();else if(ui.view?.t==='arch')body=vArch();
+ else body={today:vToday,cal:vCal,stats:vStats,settings:vSet}[ui.tab]();
+ const T=[['today','🏠','Today'],['cal','📅','Calendar'],['stats','📊','Insights'],['settings','⚙️','Settings']];
+ a.innerHTML=`<main>${body}</main>${nav?`<nav aria-label="Main">${T.map(t=>`<button class="${ui.tab===t[0]&&!ui.view?'on':''}" data-a=tab data-v=${t[0]} ${ui.tab===t[0]&&!ui.view?'aria-current=page':''}><b>${t[1]}</b>${t[2]}</button>`).join('')}</nav>`:''}${modal()}`;
+ a.querySelector('main').scrollTop=sc;
+ document.documentElement.dataset.theme=S.prefs.theme==='auto'?'':S.prefs.theme}
+const newDraft=()=>({name:'',desc:'',icon:'⭐',color:COLS[0],cat:'Health',goal:'bool',target:1,unit:'',freq:'daily',days:[1,2,3,4,5],n:3,start:today(),remOn:false,rem:[],newrem:'19:00',status:'active',pauses:[]});
+const H=id=>S.habits.find(h=>h.id===id);
+function saveForm(){const d=ui.draft,name=d.name.trim();
+ if(!name)return toast('Enter a name for your habit.');if(!DK.test(d.start)||isNaN(parse(d.start)))return toast('Choose a valid start date.');
+ if(d.freq==='days'&&!d.days.length)return toast('Pick at least one day.');
+ if(d.goal!=='bool'&&!(+d.target>0))return toast('Target must be greater than 0.');
+ const n=Math.round(+d.n);if(per(d)&&!(n>=1&&n<=(d.freq==='week'?7:31)))return toast('Times per '+d.freq+' is out of range.');
+ const h={...d,name,desc:d.desc.trim(),target:d.goal==='bool'?1:+d.target,n:per(d)?n:1,rem:[...new Set(d.rem)].sort()};delete h.newrem;
+ if(d.id)S.habits[S.habits.findIndex(x=>x.id===d.id)]=h;else{h.id='h'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);S.habits.push(h)}
+ save();if(h.remOn&&h.rem.length)askPerm();ui.view=null;ui.tab='today';ui.draft=null;toast('Saved.');render()}
+function download(){const sn={};S.habits.forEach(h=>{const t=streaks(h);sn[h.id]={current:t.cur,longest:t.best,totalCompletions:totalDone(h)}});return JSON.stringify({app:'streakwise',version:1,exported:new Date().toISOString(),...S,streakSnapshot:sn},null,1)}
+function act(a,v,id,el){
+ switch(a){
+ case'tab':ui.tab=v;ui.view=null;break;
+ case'add':ui.draft=newDraft();ui.view={t:'form'};break;
+ case'edit':ui.draft={...JSON.parse(JSON.stringify(H(id))),newrem:'19:00'};ui.view={t:'form'};break;
+ case'back':ui.view=ui.view?.t==='arch'?null:ui.view?.t==='form'&&ui.draft?.id?{t:'detail',id:ui.draft.id}:null;if(ui.view===null&&ui.tab==='settings'){}break;
+ case'open':ui.view={t:'detail',id};ui.dm=today().slice(0,8)+'01';break;
+ case'toggle':{const h=H(id);setDone(h,today(),!isDone(h,today()));break}
+ case'dtoggle':{const h=H(ui.view.id);setDone(h,v,!isDone(h,v));break}
+ case'bump':bump(H(id),today(),+v);break;
+ case'rest':toggleRest(H(id),today());break;
+ case'sel':ui.cal.sel=v;break;
+ case'cm':ui.cal.m=shiftM(ui.cal.m,+v);break;
+ case'dm':ui.dm=shiftM(ui.dm,+v);break;
+ case'set':{const f=el.dataset.f;ui.draft[f]=f==='target'?+v:v;if(f==='goal')ui.draft.target=v==='duration'?30:v==='distance'?5:v==='count'?8:1;if(f==='freq'&&v==='week')ui.draft.n=3;break}
+ case'day':{const i=+v,d=ui.draft.days;ui.draft.days=d.includes(i)?d.filter(x=>x!==i):[...d,i].sort();break}
+ case'remon':ui.draft.remOn=el.checked;if(el.checked)askPerm();break;
+ case'remadd':{const t=ui.draft.newrem;if(!/^\d{2}:\d{2}$/.test(t))return toast('Pick a time first.');if(!ui.draft.rem.includes(t))ui.draft.rem.push(t);ui.draft.rem.sort();break}
+ case'remdel':ui.draft.rem.splice(+v,1);break;
+ case'savef':return saveForm();
+ case'pause':{const h=H(id);if(h.status==='paused'){h.pauses.at(-1)[1]=today();h.status='active'}else{h.pauses.push([today(),null]);h.status='paused'}save();ui.view={t:'detail',id};toast(h.status==='paused'?'Paused. Paused days don’t count as missed.':'Resumed.');break}
+ case'archive':H(id).status='archived';save();ui.view=null;toast('Archived. History is kept.');break;
+ case'unarch':{const h=H(id);h.status='active';save();toast('Restored.');break}
+ case'delask':ui.modal={t:'Delete this habit?',b:`<p>Archiving keeps your history and statistics. Deleting permanently removes the habit and all of its records.</p><button class="btn p" data-a=archive data-id=${id}>Archive instead</button><button class="btn d" data-a=delete data-id=${id}>Delete permanently</button>`};break;
+ case'delete':{S.habits=S.habits.filter(h=>h.id!==id);for(const k in S.logs)if(k.startsWith(id+'|'))delete S.logs[k];save();ui.modal=null;ui.view=ui.view?.t==='arch'?ui.view:null;toast('Deleted.');break}
+ case'closem':ui.modal=null;break;
+ case'pref':{const f=el.dataset.f;S.prefs[f]=f==='ws'?+v:v;save();break}
+ case'perm':askPerm().then(render);return;
+ case'verify':Promise.all([idbAll('habits'),idbAll('logs')]).then(([h,l])=>toast('IndexedDB is working: '+h.length+' habits and '+l.length+' completion records stored.',5000)).catch(()=>toast('IndexedDB is not working here. Using fallback storage.',5000));return;
+ case'dl':{const b=new Blob([download()],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='streakwise-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);return}
+ case'arch':ui.view={t:'arch'};break;
+ case'exp':ui.modal={t:'Export data',b:`<p class=mu>Copy this JSON and keep it somewhere safe.</p><textarea id=ex readonly>${esc(download())}</textarea><button class="btn p" data-a=copy>Copy to clipboard</button><button class=btn data-a=dl>Download backup file</button>`};break;
+ case'copy':{const t=$('#ex');t.select();try{navigator.clipboard.writeText(t.value).then(()=>toast('Copied.'),()=>{document.execCommand('copy');toast('Copied.')})}catch(e){document.execCommand('copy');toast('Copied.')}return}
+ case'imp':ui.modal={t:'Import data',b:`<p class=mu>Paste a Streakwise JSON export. It is validated first and replaces your current data.</p><input type=file id=imf accept=".json,application/json" aria-label="Choose backup file" style="margin-bottom:8px"><textarea id=im placeholder="Or paste JSON here"></textarea><div id=ierr class=mu style="color:var(--bad)"></div><button class="btn p" data-a=doimp>Validate and import</button>`};break;
+ case'doimp':{let o;try{o=sanitize(JSON.parse($('#im').value))}catch(e){o=null}
+  if(!o)return $('#ierr').textContent='That doesn’t look like a valid Streakwise export. Nothing was changed.';
+  S=o;S.prefs.onb=true;save();ui.modal=null;toast('Imported '+o.habits.length+' habits.');break}
+ case'resetask':ui.modal={t:'Reset statistics?',b:'<p>This removes every completion and rest day. Your habits stay. This can’t be undone.</p><button class="btn d" data-a=reset>Reset statistics</button>'};break;
+ case'reset':S.logs={};save();ui.modal=null;toast('Statistics reset.');break;
+ case'about':ui.modal={t:'About',b:'<p>Streakwise is an offline-first habit tracker. Streaks and statistics are calculated from your completion records, never stored separately.</p>'};break;
+ case'priv':ui.modal={t:'Privacy',b:'<p>Your data stays in IndexedDB storage on this device. Nothing is sent to a server. Export a backup before clearing browser data.</p>'};break;
+ case'obnext':if(ui.ob<2){ui.ob++}else{S.prefs.onb=true;save();ui.draft=newDraft();ui.view={t:'form'}}break;
+ case'obskip':S.prefs.onb=true;save();break}
+ render()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t){if(t.dataset.a==='closem'&&e.target.closest('.modal>div')&&!e.target.closest('button'))return;act(t.dataset.a,t.dataset.v,t.dataset.id,t)}});
+document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.getAttribute('role')==='button'&&e.target.dataset.a){e.preventDefault();act(e.target.dataset.a,e.target.dataset.v,e.target.dataset.id,e.target)}});
+document.addEventListener('input',e=>{const f=e.target.dataset.f,p=e.target.dataset.p;if(p){S.prefs[p]=e.target.value;save()}else if(f&&ui.draft&&e.target.matches('input'))ui.draft[f]=e.target.type==='number'?e.target.value:e.target.value});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)render()});
+document.addEventListener('change',e=>{if(e.target.id==='imf'&&e.target.files[0]){const r=new FileReader();r.onload=()=>{$('#im').value=r.result};r.readAsText(e.target.files[0])}});
+render();Promise.all([boot(),new Promise(r=>setTimeout(r,900))]).then(()=>{ui.splash=false;render()});
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script></body></html>
